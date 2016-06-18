@@ -1,0 +1,19 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=49:46:A1:CD:97:9E:2A:05:52:03:02:56:F7:1E:CD:C1:74:F1:B7:EC%3Btourbears.tourbearsmap
+
+    You can also add your credentials to an existing key, using this line:
+    49:46:A1:CD:97:9E:2A:05:52:03:02:56:F7:1E:CD:C1:74:F1:B7:EC;tourbears.tourbearsmap
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBnjcXEuMYKH2eh-gwWt4uuuaMhRTzp5dA</string>
+</resources>
