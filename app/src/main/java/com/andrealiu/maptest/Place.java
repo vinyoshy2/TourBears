@@ -9,12 +9,14 @@ public class Place {
 
     public Polygon polygon;
     public String description;
-    public String layoutID;
+    public String title;
+    public final String layoutID = "place_dialogue";
 
-    public Place(Polygon polygon, String description, String layoutID) {
+    public Place(Polygon polygon, String title, String description) {
         this.polygon = polygon;
         this.description = description;
-        this.layoutID = layoutID;
+        this.title = title;
+        //this.layoutID = layoutID;
     }
 
 

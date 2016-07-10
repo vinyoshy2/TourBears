@@ -27,11 +27,13 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     final Context context = this;
+    private ArrayList<Place> places = new ArrayList<Place>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+    }
+
+    // from http://stackoverflow.com/questions/13900148/how-to-manage-infowindows-for-polygons-on-android-google-maps-api-v2?rq=1
+    private boolean containsInPolygon(LatLng latLng, Polygon polygon) {
+
+        boolean oddTransitions = false;
+        List<LatLng> pointList = polygon.getPoints();
+        float[] polyY, polyX;
+        float x = (float) (latLng.latitude);
+        float y = (float) (latLng.longitude);
+
+        // Create arrays for vertices coordinates
+        polyY = new float[pointList.size()];
+        polyX = new float[pointList.size()];
+        for (int i=0; i<pointList.size() ; i++) {
+            LatLng point = pointList.get(i);
+            polyY[i] = (float) (point.longitude);
+            polyX[i] = (float) (point.latitude);
+        }
+        // Check if a virtual infinite line cross each arc of the polygon
+        for (int i = 0, j = pointList.size() - 1; i < pointList.size(); j = i++) {
+            if ((polyY[i] < y && polyY[j] >= y)
+                    || (polyY[j] < y && polyY[i] >= y)
+                    && (polyX[i] <= x || polyX[j] <= x)) {
+                if (polyX[i] + (y - polyY[i]) / (polyY[j] - polyY[i])
+                        * (polyX[j] - polyX[i]) < x) {
+                    // The line cross this arc
+                    oddTransitions = !oddTransitions;
+                }
+            }
+        }
+        // Return odd-even number of intersecs
+        return oddTransitions;
     }
 
 
@@ -70,20 +105,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         uiSettings.setTiltGesturesEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
 
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
-            @Override
-            public void onMapClick(LatLng latLng) {
-                MarkerOptions options = new MarkerOptions().position( latLng );
-                options.title(latLng.latitude + ", " + latLng.longitude);
-
-                options.icon( BitmapDescriptorFactory.defaultMarker() );
-                mMap.addMarker(options);
-            }
-        });
-
-        ArrayList<Polygon> places = new ArrayList<Polygon>();
-
         Polygon LKSpolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.872539774466794, -122.26504124701023),
                         new LatLng(37.87252283624188, -122.2653030976653),
@@ -101,7 +122,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(LKSpolygon);
+        String LKSDesc = new StringBuilder()
+                .append("• It was the best of times, it was the worst of times,\n")
+                .append("• It was the age of wisdom, it was the age of foolishness,\n")
+                .append("• It was the epoch of belief, it was the epoch of incredulity,\n")
+                .append("• It was the season of Light, it was the season of Darkness,\n")
+                .append("• It was the spring of hope, it was the winter of despair,\n")
+                .append("• We had everything before us, we had nothing before us")
+                .toString();
+        places.add(new Place(LKSpolygon, "Li Ka Shing", LKSDesc));
 
         Polygon moffitPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.8726869251318, -122.26111315190792),
@@ -131,7 +160,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(moffitPolygon);
+        String moffitDesc = new StringBuilder()
+                .append("• First research library to be open to both Graduate and Undergraduate " +
+                        "students\n")
+                .append("• Outside, you can find news panels of various countries newspapers " +
+                        "translated into english and updated every day!\n")
+                .append("• There will be a nap center here!\n")
+                .toString();
+        places.add(new Place(moffitPolygon, "Moffit Library", moffitDesc));
 
         Polygon doePolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.8724572005836, -122.25999869406225),
@@ -151,7 +187,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(doePolygon);
+        String doeDesc = new StringBuilder()
+                .append("• One of our 27 librairies. \n")
+                .append("• Open to the public, so take a look!\n")
+                .toString();
+        places.add(new Place(doePolygon, "Doe Library", doeDesc));
 
         Polygon MLKPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.86933361669133, -122.2599919885397),
@@ -170,7 +210,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(MLKPolygon);
+        String MLKDesc = new StringBuilder()
+                .append("• Renovated and opened August 2015. \n")
+                .append("• Has a food court, a student store, and a huge ballroom where events such " +
+                        "as career fairs, often take place.\n")
+                .toString();
+        places.add(new Place(MLKPolygon, "Martin Luther King, Jr. Student Union", MLKDesc));
 
         Polygon southHallPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87152135677233, -122.25868809968233),
@@ -181,7 +226,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(southHallPolygon);
+        String southHallDesc = new StringBuilder()
+                .append("• The first building ever built on campus, it was once the college of " +
+                        "Agriculture but now it holds one of the 9 graduate schools--the school " +
+                        "of information.. \n")
+                .append("• Try finding a small bear statue hidden on the preface of the building!\n")
+                .toString();
+        places.add(new Place(southHallPolygon, "South Hall", southHallDesc));
 
         Polygon campanilePolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87251224984933, -122.25800111889838),
@@ -192,7 +243,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(campanilePolygon);
+        String campanileDesc = new StringBuilder()
+                .append("• Over 600 ft tall! (Taller than Stanford's tower) \n")
+                .append("• Plays concerts Mon-Fri at 8,12 and 6. Saturday at 12 and Sunday at 2\n")
+                .append("• Celebrated it’s 100th birthday last year (2015)\n")
+                .toString();
+        places.add(new Place(campanilePolygon, "Campanile", campanileDesc));
 
         Polygon sproulPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.86998047038954, -122.25865390151738),
@@ -211,7 +267,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(sproulPolygon);
+        String sproulDesc = new StringBuilder()
+                .append("• Administrative building includes the visitors center, financial aid, and admissions. \n")
+                .toString();
+        places.add(new Place(sproulPolygon, "Sproul Hall", sproulDesc));
 
         Polygon VLSBPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87192681997355, -122.26166836917401),
@@ -234,7 +293,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(VLSBPolygon);
+        String VLSBDesc = new StringBuilder()
+                .append("• Largest building on campus and second largest in the nation at 3.5 acres.\n")
+                .append("• Holds integrative biology and molecular cell biology majors.\n")
+                .append("• Contains Osborne, a life-size cast of the most fully intact t-rex ever found!\n")
+                .toString();
+        places.add(new Place(VLSBPolygon, "Valley Life Sciences Building", VLSBDesc));
 
         Polygon gladePolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.873373183254415, -122.25983574986458),
@@ -282,7 +346,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(gladePolygon);
+        String memGladeDesc = new StringBuilder()
+                .append("• Once a memorial for the students and faculty who served in WWII, " +
+                        "it now is a central meeting place for students.\n")
+                .append("• Our quidditch team practices here!\n")
+                .append("• Surrounded by three university seals. The seal was originally designed" +
+                        " by Tiffany and Co.!\n")
+                .toString();
+        places.add(new Place(gladePolygon, "Memorial Glade", memGladeDesc));
 
         Polygon memStadiumPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87108016157644, -122.25197654217482),
@@ -307,7 +378,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(memStadiumPolygon);
+        String memStadiumDesc = new StringBuilder()
+                .append("• Newly renovated.\n")
+                .toString();
+        places.add(new Place(memStadiumPolygon, "Memorial Stadium", memStadiumDesc));
 
         Polygon sutardjaPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87514292161614, -122.25852448493242),
@@ -322,34 +396,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x2200FFFF)
                 .strokeWidth(2)
         );
-        places.add(memStadiumPolygon);
+        String sutardjaDesc = new StringBuilder()
+                .append("• CITRUS center holds a display of various research projects for" +
+                        " the betterment of society.\n")
+                .toString();
+        places.add(new Place(sutardjaPolygon, "Sutardja Daj Hall", sutardjaDesc));
 
-        for (Polygon place: places) {
-            place.setClickable(true);
+        for (Place place: places) {
+            place.polygon.setClickable(true);
         }
+
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng latLng) {
+                MarkerOptions options = new MarkerOptions().position( latLng );
+                options.title(latLng.latitude + ", " + latLng.longitude);
+
+                options.icon( BitmapDescriptorFactory.defaultMarker() );
+                mMap.addMarker(options);
+
+            }
+        });
 
         mMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             public void onPolygonClick(Polygon polygon) {
-                /*LatLng iLatlng = new LatLng(37.872933057781424, -122.26527929306029);
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                        .position(iLatlng)
-                        .title("Li Ka Shing")
-                        .snippet("Description Here ")
-                        );
-                marker.setAlpha(0.0f);
-                marker.showInfoWindow();
-                */
 
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-//                builder1.setMessage("Li Ka Shing Description.");
+                for (Place place: places)  {
+                    if (place.polygon.equals(polygon)) {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                        builder1.setCancelable(true);
+                        builder1.setPositiveButton(
+                                "Done",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        LayoutInflater factory = LayoutInflater.from(context);
+                        final View view = factory.inflate(R.layout.place_dialogue, null);
+                        ImageView image = (ImageView) view.findViewById(R.id.image);
+                        int resId = getResources().getIdentifier("lks_image", "drawable", getPackageName());
+                        image.setImageResource(resId);
+                        TextView description = (TextView) view.findViewById(R.id.text);
+                        description.setText(place.description);
+                        TextView title = (TextView) view.findViewById(R.id.title);
+                        title.setText(place.title);
+                        builder1.setView(view);
+                        AlertDialog alert11 = builder1.create();
+                        alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+                        alert11.show();
+                        break;
+                    }
+
+                }
+
+//                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
 //                builder1.setCancelable(true);
-                LayoutInflater factory = LayoutInflater.from(context);
-                final View view = factory.inflate(R.layout.place_dialogue, null);
-                ImageView image = (ImageView) view.findViewById(R.id.image);
-                image.setImageResource(R.drawable.lks_image);
-                TextView text = (TextView) view.findViewById(R.id.text);
-                text.setText("Description herejkn");
-                builder1.setView(view);
 //                builder1.setNeutralButton(
 //                        "Done",
 //                        new DialogInterface.OnClickListener() {
@@ -357,17 +461,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                                dialog.cancel();
 //                            }
 //                        });
-////                final Dialog alert11 = new Dialog(context);
-////                alert11.setContentView(R.layout.place_dialogue);
-//                builder1.setTitle("Li Ka Shing");
-                AlertDialog alert11 = builder1.create();
-//                TextView text = (TextView) alert11.findViewById(R.id.text);
-//                text.setText("Description here");
-//                ImageView image = (ImageView) alert11.findViewById(R.id.image);
+//                LayoutInflater factory = LayoutInflater.from(context);
+//                final View view = factory.inflate(R.layout.place_dialogue, null);
+//                ImageView image = (ImageView) view.findViewById(R.id.image);
 //                image.setImageResource(R.drawable.lks_image);
-                alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-                alert11.show();
+//                TextView description = (TextView) view.findViewById(R.id.text);
+//                description.setText("Description here ");
+//                TextView title = (TextView) view.findViewById(R.id.title);
+//                title.setText("Li Ka Shing");
+//                builder1.setView(view);
+//                AlertDialog alert11 = builder1.create();
+//                alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//
+//                alert11.show();
 
             }
         });
