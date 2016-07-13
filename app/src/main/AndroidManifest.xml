@@ -11,11 +11,13 @@
 
     <application
         android:allowBackup="true"
+        android:name="android.support.multidex.MultiDexApplication">
+        android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:debuggable="true">
+
+
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -30,13 +32,25 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="tourbears.tourbearsmap.GroundOverlayActivityDemo"
-            android:label="@string/title_activity_ground_overlay">
+            android:name=".GroundOverlayActivityDemo"
+            android:label="@string/title_activity_ground_overlay"
+            android:theme="@style/Theme.AppCompat">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Sidebar"
+            android:label="@string/title_activity_sidebar"
+            android:parentActivityName=".GroundOverlayActivityDemo"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tourbears.tourbearsmap.GroundOverlayActivityDemo" />
         </activity>
     </application>
 

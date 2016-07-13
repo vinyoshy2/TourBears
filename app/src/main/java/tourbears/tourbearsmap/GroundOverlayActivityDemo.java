@@ -13,9 +13,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -43,11 +46,12 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
     private GoogleMap mMap;
 
     private GroundOverlay mGroundOverlayRotated;
-
+    private DrawerLayout mDrawerLayout;
     private SeekBar mTransparencyBar;
 
     private int mCurrentEntry = 0;
-
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,15 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        addDrawerItems();
+    }
+
+    private void addDrawerItems() {
+        String[] osArray = { "Android", "iOS", "Windows", "OS X", "Linux" };
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mAdapter);
     }
 
     @Override
@@ -85,7 +98,7 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.8757799323313, -122.26865082979202), 14));
         mImages.clear();
         //mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.ucbmap3));
-        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.ucbmapsmalla));
+        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.ucbplsworkrot));
 
         // Add a small, rotated overlay that is clickable by default
         // (set by the initial state of the checkbox.)
