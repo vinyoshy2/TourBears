@@ -11,11 +11,13 @@ public class Place {
     public String description;
     public String title;
     public final String layoutID = "place_dialogue";
+    public String imgResource;
 
-    public Place(Polygon polygon, String title, String description) {
+    public Place(Polygon polygon, String title, String description, String imgResource) {
         this.polygon = polygon;
         this.description = description;
         this.title = title;
+        this.imgResource = imgResource;
         //this.layoutID = layoutID;
     }
 

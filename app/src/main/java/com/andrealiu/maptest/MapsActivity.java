@@ -1,19 +1,31 @@
 package com.andrealiu.maptest;
 
-import android.app.Dialog;
+import android.*;
+
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import com.google.android.gms.location.LocationListener;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,58 +39,56 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     final Context context = this;
     private ArrayList<Place> places = new ArrayList<Place>();
+    private GoogleApiClient mGoogleApiClient;
+    public static final String TAG = MapsActivity.class.getSimpleName();
+    private LocationRequest mLocationRequest;
+    SupportMapFragment mapFrag;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
+
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
+
+        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFrag.getMapAsync(this);
     }
 
-    // from http://stackoverflow.com/questions/13900148/how-to-manage-infowindows-for-polygons-on-android-google-maps-api-v2?rq=1
-    private boolean containsInPolygon(LatLng latLng, Polygon polygon) {
 
-        boolean oddTransitions = false;
-        List<LatLng> pointList = polygon.getPoints();
-        float[] polyY, polyX;
-        float x = (float) (latLng.latitude);
-        float y = (float) (latLng.longitude);
+    @Override
+    public void onPause() {
+        super.onPause();
 
-        // Create arrays for vertices coordinates
-        polyY = new float[pointList.size()];
-        polyX = new float[pointList.size()];
-        for (int i=0; i<pointList.size() ; i++) {
-            LatLng point = pointList.get(i);
-            polyY[i] = (float) (point.longitude);
-            polyX[i] = (float) (point.latitude);
+        //stop location updates when Activity is no longer active
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-        // Check if a virtual infinite line cross each arc of the polygon
-        for (int i = 0, j = pointList.size() - 1; i < pointList.size(); j = i++) {
-            if ((polyY[i] < y && polyY[j] >= y)
-                    || (polyY[j] < y && polyY[i] >= y)
-                    && (polyX[i] <= x || polyX[j] <= x)) {
-                if (polyX[i] + (y - polyY[i]) / (polyY[j] - polyY[i])
-                        * (polyX[j] - polyX[i]) < x) {
-                    // The line cross this arc
-                    oddTransitions = !oddTransitions;
-                }
-            }
-        }
-        // Return odd-even number of intersecs
-        return oddTransitions;
     }
 
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
 
     /**
      * Manipulates the map once available.
@@ -93,12 +103,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        //Initialize Google Play Services
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                buildGoogleApiClient();
+                mMap.setMyLocationEnabled(true);
+            }
+        }
+        else {
+            buildGoogleApiClient();
+            mMap.setMyLocationEnabled(true);
+        }
 
         LatLng statue = new LatLng(37.873046331455676 , -122.26484343409538);
         mMap.addMarker(new MarkerOptions().position(statue).title("Li Ka Shing Statue"));
+
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(statue));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.873046331455676, -122.26484343409538), 18));
-        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.87514292161614, -122.25852448493242), 18));
+        //OLD ONE = mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.87514292161614, -122.25852448493242), 18));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         UiSettings uiSettings = mMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
@@ -130,7 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .append("• It was the spring of hope, it was the winter of despair,\n")
                 .append("• We had everything before us, we had nothing before us")
                 .toString();
-        places.add(new Place(LKSpolygon, "Li Ka Shing", LKSDesc));
+        places.add(new Place(LKSpolygon, "Li Ka Shing", LKSDesc, "lks_image"));
 
         Polygon moffitPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.8726869251318, -122.26111315190792),
@@ -167,7 +191,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         "translated into english and updated every day!\n")
                 .append("• There will be a nap center here!\n")
                 .toString();
-        places.add(new Place(moffitPolygon, "Moffit Library", moffitDesc));
+        places.add(new Place(moffitPolygon, "Moffit Library", moffitDesc, "moffitt"));
 
         Polygon doePolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.8724572005836, -122.25999869406225),
@@ -191,7 +215,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .append("• One of our 27 librairies. \n")
                 .append("• Open to the public, so take a look!\n")
                 .toString();
-        places.add(new Place(doePolygon, "Doe Library", doeDesc));
+        places.add(new Place(doePolygon, "Doe Library", doeDesc, "doe"));
 
         Polygon MLKPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.86933361669133, -122.2599919885397),
@@ -215,7 +239,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .append("• Has a food court, a student store, and a huge ballroom where events such " +
                         "as career fairs, often take place.\n")
                 .toString();
-        places.add(new Place(MLKPolygon, "Martin Luther King, Jr. Student Union", MLKDesc));
+        places.add(new Place(MLKPolygon, "Martin Luther King, Jr. Student Union", MLKDesc, "mlk"));
 
         Polygon southHallPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87152135677233, -122.25868809968233),
@@ -232,7 +256,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         "of information.. \n")
                 .append("• Try finding a small bear statue hidden on the preface of the building!\n")
                 .toString();
-        places.add(new Place(southHallPolygon, "South Hall", southHallDesc));
+        places.add(new Place(southHallPolygon, "South Hall", southHallDesc, "south"));
 
         Polygon campanilePolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87251224984933, -122.25800111889838),
@@ -248,7 +272,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .append("• Plays concerts Mon-Fri at 8,12 and 6. Saturday at 12 and Sunday at 2\n")
                 .append("• Celebrated it’s 100th birthday last year (2015)\n")
                 .toString();
-        places.add(new Place(campanilePolygon, "Campanile", campanileDesc));
+        places.add(new Place(campanilePolygon, "Campanile", campanileDesc, "campanile"));
 
         Polygon sproulPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.86998047038954, -122.25865390151738),
@@ -270,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String sproulDesc = new StringBuilder()
                 .append("• Administrative building includes the visitors center, financial aid, and admissions. \n")
                 .toString();
-        places.add(new Place(sproulPolygon, "Sproul Hall", sproulDesc));
+        places.add(new Place(sproulPolygon, "Sproul Hall", sproulDesc, "sproulhall"));
 
         Polygon VLSBPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87192681997355, -122.26166836917401),
@@ -298,7 +322,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .append("• Holds integrative biology and molecular cell biology majors.\n")
                 .append("• Contains Osborne, a life-size cast of the most fully intact t-rex ever found!\n")
                 .toString();
-        places.add(new Place(VLSBPolygon, "Valley Life Sciences Building", VLSBDesc));
+        places.add(new Place(VLSBPolygon, "Valley Life Sciences Building", VLSBDesc, "vlsb"));
 
         Polygon gladePolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.873373183254415, -122.25983574986458),
@@ -353,7 +377,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .append("• Surrounded by three university seals. The seal was originally designed" +
                         " by Tiffany and Co.!\n")
                 .toString();
-        places.add(new Place(gladePolygon, "Memorial Glade", memGladeDesc));
+        places.add(new Place(gladePolygon, "Memorial Glade", memGladeDesc, "memglade"));
 
         Polygon memStadiumPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87108016157644, -122.25197654217482),
@@ -381,7 +405,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String memStadiumDesc = new StringBuilder()
                 .append("• Newly renovated.\n")
                 .toString();
-        places.add(new Place(memStadiumPolygon, "Memorial Stadium", memStadiumDesc));
+        places.add(new Place(memStadiumPolygon, "Memorial Stadium", memStadiumDesc, "memstadium"));
 
         Polygon sutardjaPolygon = mMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(37.87514292161614, -122.25852448493242),
@@ -400,7 +424,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .append("• CITRUS center holds a display of various research projects for" +
                         " the betterment of society.\n")
                 .toString();
-        places.add(new Place(sutardjaPolygon, "Sutardja Daj Hall", sutardjaDesc));
+        places.add(new Place(sutardjaPolygon, "Sutardja Daj Hall", sutardjaDesc, "sutardja"));
 
         for (Place place: places) {
             place.polygon.setClickable(true);
@@ -436,7 +460,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         LayoutInflater factory = LayoutInflater.from(context);
                         final View view = factory.inflate(R.layout.place_dialogue, null);
                         ImageView image = (ImageView) view.findViewById(R.id.image);
-                        int resId = getResources().getIdentifier("lks_image", "drawable", getPackageName());
+                        int resId = getResources().getIdentifier(place.imgResource, "drawable", getPackageName());
                         image.setImageResource(resId);
                         TextView description = (TextView) view.findViewById(R.id.text);
                         description.setText(place.description);
@@ -452,28 +476,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
 
-//                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-//                builder1.setCancelable(true);
-//                builder1.setNeutralButton(
-//                        "Done",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                            }
-//                        });
-//                LayoutInflater factory = LayoutInflater.from(context);
-//                final View view = factory.inflate(R.layout.place_dialogue, null);
-//                ImageView image = (ImageView) view.findViewById(R.id.image);
-//                image.setImageResource(R.drawable.lks_image);
-//                TextView description = (TextView) view.findViewById(R.id.text);
-//                description.setText("Description here ");
-//                TextView title = (TextView) view.findViewById(R.id.title);
-//                title.setText("Li Ka Shing");
-//                builder1.setView(view);
-//                AlertDialog alert11 = builder1.create();
-//                alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//
-//                alert11.show();
 
             }
         });
@@ -481,4 +483,116 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {}
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {}
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+
+        Log.i("DEBUG", "ON LOCATION CHANGED");
+//        mLastLocation = location;
+//        if (mCurrLocationMarker != null) {
+//            mCurrLocationMarker.remove();
+//        }
+//
+//        //Place current location marker
+//        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(latLng);
+//        markerOptions.title("Current Position");
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+//        mCurrLocationMarker = mMap.addMarker(markerOptions);
+
+//        //move map camera
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+        //stop location updates
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                //Prompt the user once explanation has been shown
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        if (mGoogleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        mMap.setMyLocationEnabled(true);
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 }
