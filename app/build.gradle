@@ -23,7 +23,7 @@ android {
         }
     }
     dexOptions {
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize "5g"
     }
 }
 
@@ -37,5 +37,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:9.2.0'
     compile 'com.google.android.gms:play-services-auth:9.2.0'
     compile 'com.google.android.gms:play-services-gcm:9.2.0'
-    compile 'com.android.support:support-v13:24.0.0'
+    compile 'com.android.support:support-v13:23.0.0'
 }

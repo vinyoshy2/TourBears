@@ -11,6 +11,7 @@
 
     <application
         android:allowBackup="true"
+        android:largeHeap="true"
         android:name="android.support.multidex.MultiDexApplication">
         android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
