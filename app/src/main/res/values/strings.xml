@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">TourBearsMap</string>
     <string name="title_activity_ground_overlay">Map</string>
-    <string name="transparency">Transparency</string>
-    <string name="switch_image">Switch Image</string>
-    <string name="clickable">Clickable</string>
+    <string name="toggle_text">Toggle Tours</string>
+    <string name="main_tour">Main Tour</string>
+    <string name="chem_eng_tour">College of Chem and Engineering</string>
     <string name="title_activity_sidebar">Sidebar</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

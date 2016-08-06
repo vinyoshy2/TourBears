@@ -19,12 +19,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.*;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +41,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -87,6 +91,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
     Location mLastLocation;
     Marker mCurrLocationMarker;
 
+    private Polyline mainTourLine;
+    private Polyline chemEngTourLine;
 
 
     @Override
@@ -98,9 +104,9 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
             checkLocationPermission();
         }
 
-        mTransparencyBar = (SeekBar) findViewById(R.id.transparencySeekBar);
-        mTransparencyBar.setMax(TRANSPARENCY_MAX);
-        mTransparencyBar.setProgress(0);
+//        mTransparencyBar = (SeekBar) findViewById(R.id.transparencySeekBar);
+//        mTransparencyBar.setMax(TRANSPARENCY_MAX);
+//        mTransparencyBar.setProgress(0);
 
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
@@ -110,15 +116,27 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
     }
 
     private void addDrawerItems() {
-        String[] osArray = { "Android", "iOS", "Windows", "OS X", "Linux" };
+        String[] osArray = { "Android", "iOS", "Windows", "OS X", "Tour Toggle" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
+//
+//        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (position == 4) {
+//                    Toast.makeText(GroundOverlayActivityDemo.this, "Toggling tour!" + position, Toast.LENGTH_SHORT).show();
+//                    toggleTour();
+//                }
+//
+//            }
+//        });
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         // Register a listener to respond to clicks on GroundOverlays.
         mMap = map;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -136,7 +154,7 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
 
         mUiSettings = mMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
-        mMap.setOnGroundOverlayClickListener(this);
+//        mMap.setOnGroundOverlayClickListener(this);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -149,22 +167,24 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
             }
         });
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(UCBSMALL, 11));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.8757799323313, -122.26865082979202), 14));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.86952973782737, -122.2593318298459), 18));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.86952973782737, -122.2593318298459), 18));
+        // OLD
+        //map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.8757799323313, -122.26865082979202), 14));
         mImages.clear();
         //mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.ucbmap3));
-        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.ucbplsworkrot));
+//        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.ucbplsworkrot));
 
         // Add a small, rotated overlay that is clickable by default
         // (set by the initial state of the checkbox.)
         float rot = (float)80;
-        mGroundOverlayRotated = map.addGroundOverlay(new GroundOverlayOptions()
-                .image(mImages.get(mCurrentEntry)).anchor(0, 1)
-                .position(UCBSMALL, 1110f, 1310f)
-                .bearing(rot)
-                .clickable(((CheckBox) findViewById(R.id.toggleClickability)).isChecked()));
+//        mGroundOverlayRotated = map.addGroundOverlay(new GroundOverlayOptions()
+//                .image(mImages.get(mCurrentEntry)).anchor(0, 1)
+//                .position(UCBSMALL, 1110f, 1310f)
+//                .bearing(rot)
+//                .clickable(((CheckBox) findViewById(R.id.toggleClickability)).isChecked()));
 
-        mTransparencyBar.setOnSeekBarChangeListener(this);
+//        mTransparencyBar.setOnSeekBarChangeListener(this);
 
         // Override the default content description on the view, for accessibility mode.
         // Ideally this string would be localised.
@@ -467,49 +487,384 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                 .toString();
         places.add(new Place(sutardjaPolygon, "Sutardja Daj Hall", sutardjaDesc, "sutardja"));
 
-        for (Place place: places) {
-            place.polygon.setClickable(true);
+        Polygon wursterPolygon = mMap.addPolygon(new PolygonOptions()
+                .add(new LatLng(37.87093883034309, -122.25527867674829),
+                        new LatLng(37.870615937744034, -122.25521899759768),
+                        new LatLng(37.87063605240628, -122.25501280277969),
+                        new LatLng(37.869995821185725, -122.25487165153027),
+                        new LatLng(37.87008660255303, -122.25426346063614),
+                        new LatLng(37.870234816789846, -122.25429095327854),
+                        new LatLng(37.870249902865076, -122.25418534129857),
+                        new LatLng(37.87067628171431, -122.25426815450193),
+                        new LatLng(37.87066304839172, -122.25438214838503),
+                        new LatLng(37.870744830287286, -122.25439891219139),
+                        new LatLng(37.870760180924215, -122.254284247756),
+                        new LatLng(37.87111827332328, -122.25435633212327),
+                        new LatLng(37.87108810152533, -122.25461684167385),
+                        new LatLng(37.87101002532412, -122.2545977309346))
+                .strokeColor(0xFF00AA00)
+                .fillColor(0x2200FFFF)
+                .strokeWidth(2)
+        );
+        String wursterDesc = new StringBuilder()
+                .append("• Wurster Hall encompasses the College of Environmental Design where you " +
+                        "can find majors in Architecture, city planning, and sustainable " +
+                        "environmental design.\n")
+                .append("• Cal Alumni Irving Morrow designed the Golden Gate Bridge! Go up the " +
+                        "Campanile to see his amazing work\n")
+                .toString();
+        places.add(new Place(wursterPolygon, "Wurster Hall", wursterDesc, "wurster"));
+
+        Polygon bechtelPolygon = mMap.addPolygon(new PolygonOptions()
+                .add(new LatLng(37.87417297158065, -122.25779861211777),
+                        new LatLng(37.87446197303607, -122.25789818912745),
+                        new LatLng(37.87429153641745, -122.25862741470335),
+                        new LatLng(37.873937164608115, -122.25850000977516),
+                        new LatLng(37.874012061854025, -122.25819692015648),
+                        new LatLng(37.87410045638551, -122.25822810083628),
+                        new LatLng(37.87413697864599, -122.25807420909405),
+                        new LatLng(37.87410892531709, -122.25806280970573))
+                .strokeColor(0xFF00AA00)
+                .fillColor(0x2200FFFF)
+                .strokeWidth(2)
+        );
+        String bechtelDesc = new StringBuilder()
+                .append("• Wurster Hall encompasses the College of Environmental Design where you " +
+                        "can find majors in Architecture, city planning, and sustainable " +
+                        "environmental design.\n")
+                .append("• Cal Alumni Irving Morrow designed the Golden Gate Bridge! Go up the " +
+                        "Campanile to see his amazing work\n")
+                .toString();
+        places.add(new Place(bechtelPolygon, "Bechtel Engineering Library", bechtelDesc, "bechtel"));
+
+        Polygon evansPolygon = mMap.addPolygon(new PolygonOptions()
+                .add(new LatLng(37.87379848540762, -122.25817780941725),
+                        new LatLng(37.87390858189349, -122.25771378725769),
+                        new LatLng(37.87339700235713, -122.25752670317888),
+                        new LatLng(37.87327975936603, -122.25798469036818))
+                .strokeColor(0xFF00AA00)
+                .fillColor(0x2200FFFF)
+                .strokeWidth(2)
+        );
+        String evansDesc = new StringBuilder()
+                .append("• If you ever take a math or statistics class, you will probably go to Evans Hall. \n")
+                .append("• This is also where you can find undergraduate college advisers for" +
+                        " the College of Letters and Sciences.\n")
+                .toString();
+        places.add(new Place(evansPolygon, "Evans Hall", evansDesc, "evans"));
+
+        Polygon jacobsPolygon = mMap.addPolygon(new PolygonOptions()
+                .add(new LatLng(37.876113652812, -122.25903611630201),
+                        new LatLng(37.87582756897271, -122.25897040218115),
+                        new LatLng(37.87588870261739, -122.258539237082),
+                        new LatLng(37.87617716804848, -122.2586103156209))
+                .strokeColor(0xFF00AA00)
+                .fillColor(0x2200FFFF)
+                .strokeWidth(2)
+        );
+        String jacobsDesc = new StringBuilder()
+                .append("• This is a brand new building, opened Fall of 2015. \n")
+                .append("• It contains several 3-D printers and is home to various classes specifically for innovative design!\n")
+                .toString();
+        places.add(new Place(jacobsPolygon, "Jacobs Hall", jacobsDesc, "jacobs"));
+
+        Polygon starrPolygon = mMap.addPolygon(new PolygonOptions()
+                .add(new LatLng(37.87375349400784, -122.26002618670465),
+                        new LatLng(37.873472958777754, -122.2599222511053),
+                        new LatLng(37.87337821173228, -122.26029206067325),
+                        new LatLng(37.87340070755021, -122.2603017836809),
+                        new LatLng(37.87334380635043, -122.26061090826987),
+                        new LatLng(37.87359390664474, -122.26070042699574))
+                .strokeColor(0xFF00AA00)
+                .fillColor(0x2200FFFF)
+                .strokeWidth(2)
+        );
+        String starrDesc = new StringBuilder()
+                .append("• The first academic building built solely for East Asian studies! \n")
+                .toString();
+        places.add(new Place(starrPolygon, "Starr East Asian Library", starrDesc, "starr"));
+
+        Polygon bampfaPolygon = mMap.addPolygon(new PolygonOptions()
+                .add(new LatLng(37.870925332402116, -122.26678870618345),
+                        new LatLng(37.870597411076574, -122.26672902703285),
+                        new LatLng(37.87067601704789, -122.26604271680118),
+                        new LatLng(37.8710039380236, -122.2660980373621))
+                .strokeColor(0xFF00AA00)
+                .fillColor(0x2200FFFF)
+                .strokeWidth(2)
+        );
+        String bampfaDesc = new StringBuilder()
+                .append("• A newly renovated Museum which opened spring of 2016! \n")
+                .append("• Check out unique screenings of films! \n")
+                .toString();
+        places.add(new Place(bampfaPolygon, "Berkeley Art Museum and Pacific Film Archive", bampfaDesc, "bampfa"));
+
+        Polygon dwinellePolygon = mMap.addPolygon(new PolygonOptions()
+                .add(new LatLng(37.87111430335058, -122.26124893873929),
+                        new LatLng(37.870606409744205, -122.26106185466051),
+                        new LatLng(37.87067204705134, -122.2607570886612),
+                        new LatLng(37.8703176578316, -122.26066220551729),
+                        new LatLng(37.87029754308242, -122.2607594355941),
+                        new LatLng(37.87011121672373, -122.26072892546654),
+                        new LatLng(37.87021073199665, -122.25995577871801),
+                        new LatLng(37.870407115465376, -122.26001143455507),
+                        new LatLng(37.870368209348065, -122.26024881005287),
+                        new LatLng(37.87077950154893, -122.26036883890629),
+                        new LatLng(37.870827670755595, -122.26013146340846),
+                        new LatLng(37.870992557416926, -122.26019985973835),
+                        new LatLng(37.87092242108121, -122.2604861855507),
+                        new LatLng(37.87113309455287, -122.26056430488823),
+                        new LatLng(37.87115426773278, -122.26047310978174),
+                        new LatLng(37.87126780880629, -122.26051736623047))
+                .strokeColor(0xFF00AA00)
+                .fillColor(0x2200FFFF)
+                .strokeWidth(2)
+        );
+        String dwinelleDesc = new StringBuilder()
+                .append("• Home to many history, humanities, and languages classes.  \n")
+                .append("• Every semester, UC Berkeley offers over 60 languages, from Swahili to Yiddish to Farsai! \n")
+                .toString();
+        places.add(new Place(dwinellePolygon, "Dwinelle Hall", dwinelleDesc, "dwinelle"));
+
+//        for (Place place: places) {
+//            place.polygon.setClickable(true);
+//        }
+
+
+        /* POLY LINES */
+        ArrayList<LatLng> mainTourPoints = new ArrayList<LatLng>();
+        mainTourPoints.add(new LatLng(37.872425970693385, -122.2601877897978));
+        mainTourPoints.add(new LatLng(37.87235213047661, -122.26030111312866));
+        mainTourPoints.add(new LatLng(37.87226690977598, -122.2604452818632));
+        mainTourPoints.add(new LatLng(37.872203126516304, -122.26058777421713));
+        mainTourPoints.add(new LatLng(37.87214807701958, -122.26077016443014));
+        mainTourPoints.add(new LatLng(37.872115523692045, -122.26098842918871));
+        mainTourPoints.add(new LatLng(37.87210043799881, -122.26120501756668));
+        mainTourPoints.add(new LatLng(37.87215072363093, -122.26145144551994));
+        mainTourPoints.add(new LatLng(37.87219333406076, -122.26156108081342));
+        mainTourPoints.add(new LatLng(37.87219571600951, -122.26171195507051));
+        mainTourPoints.add(new LatLng(37.872188040841, -122.26188395172358));
+        mainTourPoints.add(new LatLng(37.87216713261926, -122.2619630768895));
+        mainTourPoints.add(new LatLng(37.87205094631685, -122.26237244904043));
+        // right in front of VLSB
+        mainTourPoints.add(new LatLng(37.871074338946705, -122.26197615265845));
+        mainTourPoints.add(new LatLng(37.87081417279427, -122.26191882044077));
+        mainTourPoints.add(new LatLng(37.8705373317086, -122.26191278547047));
+        mainTourPoints.add(new LatLng(37.8703367139047, -122.26174615323544));
+        mainTourPoints.add(new LatLng(37.8701861178592, -122.26170457899569));
+        mainTourPoints.add(new LatLng(37.87008766122722, -122.26184137165546));
+        mainTourPoints.add(new LatLng(37.8699770296934, -122.26180147379635));
+        // intersection of spieker plaza and cross-sproul path
+        mainTourPoints.add(new LatLng(37.869447160570566, -122.26168345659971));
+        mainTourPoints.add(new LatLng(37.86952020968707, -122.26105514913796));
+        mainTourPoints.add(new LatLng(37.8695196803459, -122.26095356047152));
+        mainTourPoints.add(new LatLng(37.86950962286309, -122.26067058742046));
+        mainTourPoints.add(new LatLng(37.86945113063309, -122.26062700152399));
+        mainTourPoints.add(new LatLng(37.869399255132365, -122.2605401650071));
+        mainTourPoints.add(new LatLng(37.869392638356686, -122.26051602512598));
+        mainTourPoints.add(new LatLng(37.8693799341457, -122.26035308092833));
+        mainTourPoints.add(new LatLng(37.86939396171185, -122.26022031158207));
+        mainTourPoints.add(new LatLng(37.86944636655802, -122.2597723826766));
+        mainTourPoints.add(new LatLng(37.86947495100386, -122.2596312314272));
+        // first point right in front of sproul
+        mainTourPoints.add(new LatLng(37.86952973782737, -122.2593318298459));
+        mainTourPoints.add(new LatLng(37.87011942144545, -122.25945688784122));
+        mainTourPoints.add(new LatLng(37.87070962967669, -122.25961580872534));
+        mainTourPoints.add(new LatLng(37.870827141423824, -122.25914172828197));
+        mainTourPoints.add(new LatLng(37.871024052579926, -122.25850738584995));
+        mainTourPoints.add(new LatLng(37.87126145686272, -122.25803699344397));
+        mainTourPoints.add(new LatLng(37.87164945374283, -122.25759945809843));
+        mainTourPoints.add(new LatLng(37.87198028166517, -122.25773356854916));
+        mainTourPoints.add(new LatLng(37.87290050480075, -122.25813221186401));
+        mainTourPoints.add(new LatLng(37.87286424658585, -122.25821904838085));
+        mainTourPoints.add(new LatLng(37.872770557393146, -122.25862506777048));
+        // edge of memorial glade
+        mainTourPoints.add(new LatLng(37.87297831434038, -122.25870653986931));
+        mainTourPoints.add(new LatLng(37.87287668553748, -122.25921414792538));
+        mainTourPoints.add(new LatLng(37.872868216464255, -122.25927148014307));
+        mainTourPoints.add(new LatLng(37.87286689317148, -122.25934121757747));
+        mainTourPoints.add(new LatLng(37.872869275098445, -122.2593951970339));
+        mainTourPoints.add(new LatLng(37.87279675862005, -122.25946225225925));
+//        // break off from memorial glade after below point
+        mainTourPoints.add(new LatLng(37.87276605819164, -122.25951053202154));
+        // INSERT: CIRCLE DOE LIBRARY
+        mainTourPoints.add(new LatLng(37.87241194370449, -122.2593677043915));
+        mainTourPoints.add(new LatLng(37.871937935774035, -122.25918900221585));
+        mainTourPoints.add(new LatLng(37.871846627363404, -122.25961480289699));
+        mainTourPoints.add(new LatLng(37.87231163742307, -122.25981093943119));
+        mainTourPoints.add(new LatLng(37.87241194370449, -122.2593677043915));
+        // go back to memorial glade point
+        mainTourPoints.add(new LatLng(37.87276605819164, -122.25951053202154));
+        // resume
+        mainTourPoints.add(new LatLng(37.872755736493, -122.2595738992095));
+        mainTourPoints.add(new LatLng(37.87274964933671, -122.2596349194646));
+        mainTourPoints.add(new LatLng(37.872743297520934, -122.25969560444354));
+        mainTourPoints.add(new LatLng(37.87272715331999, -122.2597509250045));
+        mainTourPoints.add(new LatLng(37.87269168899734, -122.25982334464787));
+        mainTourPoints.add(new LatLng(37.872688248427814, -122.25988168269396));
+        mainTourPoints.add(new LatLng(37.8727017460458, -122.2599494084716));
+        mainTourPoints.add(new LatLng(37.8727290059334, -122.26002249866725));
+        mainTourPoints.add(new LatLng(37.87278987749065, -122.26011101156473));
+        mainTourPoints.add(new LatLng(37.87267951467369, -122.26016767323019));
+        mainTourPoints.add(new LatLng(37.87251807236542, -122.26019516587259));
+        mainTourPoints.add(new LatLng(37.872425970693385, -122.2601877897978));
+        PolylineOptions mainOptions = new PolylineOptions().width(7).color(Color.parseColor("#ff7473")).geodesic(true);
+        for (int z = 0; z < mainTourPoints.size(); z++) {
+            LatLng point = mainTourPoints.get(z);
+            mainOptions.add(point);
         }
+        mainTourLine = mMap.addPolyline(mainOptions);
 
-        mMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
-            public void onPolygonClick(Polygon polygon) {
+        ArrayList<LatLng> chemEngTourPoints = new ArrayList<LatLng>();
+        // start: in front of Sproul
+        chemEngTourPoints.add(new LatLng(37.86952973782737, -122.2593318298459));
+        chemEngTourPoints.add(new LatLng(37.87011942144545, -122.25945688784122));
+        chemEngTourPoints.add(new LatLng(37.87070962967669, -122.25961580872534));
+        chemEngTourPoints.add(new LatLng(37.87157005482043, -122.25992124527693));
+        chemEngTourPoints.add(new LatLng(37.87165077705749, -122.25960072129965));
+        //
+        chemEngTourPoints.add(new LatLng(37.87179713551093, -122.25894022732972));
+        chemEngTourPoints.add(new LatLng(37.8717831084023, -122.25880343466997));
+        chemEngTourPoints.add(new LatLng(37.87171297281915, -122.25847194658052));
+        chemEngTourPoints.add(new LatLng(37.87171509012076, -122.25839976221323));
+        chemEngTourPoints.add(new LatLng(37.87175452485195, -122.25825157016514));
+        chemEngTourPoints.add(new LatLng(37.87124372435076, -122.25804906338453));
+        chemEngTourPoints.add(new LatLng(37.871353030662576, -122.25791595876217));
+        chemEngTourPoints.add(new LatLng(37.87183683486045, -122.25739862769842));
+        chemEngTourPoints.add(new LatLng(37.87206365006726, -122.25690476596354));
+        chemEngTourPoints.add(new LatLng(37.87222377006697, -122.25646991282701));
+        chemEngTourPoints.add(new LatLng(37.87264193305319, -122.25662346929313));
+        chemEngTourPoints.add(new LatLng(37.87282984096395, -122.25666303187609));
+        // above = right next to gilman hall; before loop
+        // below = top left of loop (clockwise)
+        chemEngTourPoints.add(new LatLng(37.87295661236821, -122.2561986744404));
+        chemEngTourPoints.add(new LatLng(37.87311170193144, -122.2553500905633));
+        chemEngTourPoints.add(new LatLng(37.87293755697273, -122.25527197122574));
+        chemEngTourPoints.add(new LatLng(37.8727689694397, -122.25613731890918));
+        chemEngTourPoints.add(new LatLng(37.87295661236821, -122.2561986744404));
+        chemEngTourPoints.add(new LatLng(37.87282984096395, -122.25666303187609));
+        // resume
+        chemEngTourPoints.add(new LatLng(37.873349099487136, -122.25684374570847));
+        chemEngTourPoints.add(new LatLng(37.873549973744474, -122.2565896064043));
+        chemEngTourPoints.add(new LatLng(37.87371061982484, -122.25659564137457));
+        chemEngTourPoints.add(new LatLng(37.87380166127009, -122.25661173462868));
+        chemEngTourPoints.add(new LatLng(37.873870471590074, -122.25666169077158));
+        chemEngTourPoints.add(new LatLng(37.87393689995342, -122.25673478096724));
+        chemEngTourPoints.add(new LatLng(37.87398639036843, -122.25680351257324));
+        chemEngTourPoints.add(new LatLng(37.874002534293396, -122.25690979510547));
+        chemEngTourPoints.add(new LatLng(37.87400465152921, -122.25696913897991));
+        chemEngTourPoints.add(new LatLng(37.8738760293439, -122.25751228630543));
+        // finished looping memorial glade
+        chemEngTourPoints.add(new LatLng(37.87395674905432, -122.25763365626335));
+        chemEngTourPoints.add(new LatLng(37.87402873508217, -122.25767489522694));
+        chemEngTourPoints.add(new LatLng(37.87459138815545, -122.2578666731715));
+        chemEngTourPoints.add(new LatLng(37.874621029214175, -122.2578666731715));
+        chemEngTourPoints.add(new LatLng(37.87466178565046, -122.25784756243227));
+        chemEngTourPoints.add(new LatLng(37.8746850750325, -122.25788276642562));
+        chemEngTourPoints.add(new LatLng(37.87472000909178, -122.25792601704596));
+        chemEngTourPoints.add(new LatLng(37.874743563107224, -122.25794479250908));
+        chemEngTourPoints.add(new LatLng(37.87480046322584, -122.25797295570374));
+        chemEngTourPoints.add(new LatLng(37.87484095491138, -122.25799173116684));
+        chemEngTourPoints.add(new LatLng(37.87535331936933, -122.2581871971488));
+        // entered Hearst ^
+        chemEngTourPoints.add(new LatLng(37.87531229766587, -122.25847687572241));
+        chemEngTourPoints.add(new LatLng(37.87523052084047, -122.25845541805029));
+        chemEngTourPoints.add(new LatLng(37.87521093673289, -122.2584530711174));
+        chemEngTourPoints.add(new LatLng(37.8751995567761, -122.25845575332642));
+        chemEngTourPoints.add(new LatLng(37.875175473605935, -122.25847452878953));
+        chemEngTourPoints.add(new LatLng(37.875154830882366, -122.25850537419319));
+        chemEngTourPoints.add(new LatLng(37.87514556811989, -122.25853521376848));
+        chemEngTourPoints.add(new LatLng(37.87503838464108, -122.25851040333508));
+        chemEngTourPoints.add(new LatLng(37.8749904828384, -122.2584979981184));
+        chemEngTourPoints.add(new LatLng(37.87492881914596, -122.2584741935134));
+        chemEngTourPoints.add(new LatLng(37.87492008565748, -122.2584741935134));
+        chemEngTourPoints.add(new LatLng(37.87491399868002, -122.25848324596882));
+        chemEngTourPoints.add(new LatLng(37.87491082286551, -122.2584879398346));
+        chemEngTourPoints.add(new LatLng(37.87482295860946, -122.25883092731237));
+        // passed CITRIS
+        chemEngTourPoints.add(new LatLng(37.874817136275524, -122.25883964449166));
+        chemEngTourPoints.add(new LatLng(37.87479120041881, -122.25885540246964));
+        chemEngTourPoints.add(new LatLng(37.87474965009874, -122.25895430892707));
+        chemEngTourPoints.add(new LatLng(37.874691691332885, -122.2589372098446));
+        chemEngTourPoints.add(new LatLng(37.874626586911354, -122.2589123994112));
+        chemEngTourPoints.add(new LatLng(37.87452734225565, -122.2588725015521));
+        chemEngTourPoints.add(new LatLng(37.87439448653394, -122.25881919264793));
+        chemEngTourPoints.add(new LatLng(37.87436563934357, -122.25880712270737));
+        chemEngTourPoints.add(new LatLng(37.87430053463388, -122.2587601840496));
+        chemEngTourPoints.add(new LatLng(37.87424469274359, -122.25873604416847));
+        chemEngTourPoints.add(new LatLng(37.874174294849965, -122.25870352238415));
+        chemEngTourPoints.add(new LatLng(37.87408616506126, -122.25866362452507));
+        chemEngTourPoints.add(new LatLng(37.87401788425159, -122.25864350795747));
+        chemEngTourPoints.add(new LatLng(37.87389931897435, -122.25860696285964));
 
-                for (Place place: places)  {
-                    if (place.polygon.equals(polygon)) {
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
-                        builder1.setCancelable(true);
-                        builder1.setInverseBackgroundForced(true);
-                        builder1.setPositiveButton(
-                                "Done",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        LayoutInflater factory = LayoutInflater.from(context);
-                        final View view = factory.inflate(R.layout.place_dialogue, null);
-                        ImageView image = (ImageView) view.findViewById(R.id.image);
-                        int resId = getResources().getIdentifier(place.imgResource, "drawable", getPackageName());
-                        image.setImageResource(resId);
-                        TextView description = (TextView) view.findViewById(R.id.text);
-                        description.setText(place.description);
-                        TextView title = (TextView) view.findViewById(R.id.title);
-                        title.setText(place.title);
-                        builder1.setView(view);
-                        AlertDialog alert11 = builder1.create();
-                        alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        PolylineOptions chemEngOptions = new PolylineOptions().width(7).color(Color.parseColor("#D1B6E1")).geodesic(true);
+        for (int z = 0; z < chemEngTourPoints.size(); z++) {
+            LatLng point = chemEngTourPoints.get(z);
+            chemEngOptions.add(point);
+        }
+        chemEngTourLine = mMap.addPolyline(chemEngOptions);
 
-                        alert11.show();
-                        break;
-                    }
 
+
+//        mMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+//            public void onPolygonClick(Polygon polygon) {
+//
+//                for (Place place: places)  {
+//                    if (place.polygon.equals(polygon)) {
+//                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+//                        builder1.setCancelable(true);
+////                        builder1.setInverseBackgroundForced(true);
+//                        builder1.setPositiveButton(
+//                                "Done",
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int id) {
+//                                        dialog.cancel();
+//                                    }
+//                                });
+//                        LayoutInflater factory = LayoutInflater.from(context);
+//                        final View view = factory.inflate(R.layout.place_dialogue, null);
+//                        ImageView image = (ImageView) view.findViewById(R.id.image);
+//                        int resId = getResources().getIdentifier(place.imgResource, "drawable", getPackageName());
+//                        image.setImageResource(resId);
+//                        TextView description = (TextView) view.findViewById(R.id.text);
+//                        description.setText(place.description);
+//                        TextView title = (TextView) view.findViewById(R.id.title);
+//                        title.setText(place.title);
+//                        builder1.setView(view);
+//                        AlertDialog alert11 = builder1.create();
+//                        alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//
+//                        alert11.show();
+//                        break;
+//                    }
+//
+//                }
+//
+//
+//            }
+//        });
+
+
+    }
+
+    public void toggleTour(View v) {
+
+        switch (v.getId()) {
+            case (R.id.main_tour_button):
+                if (mainTourLine.isVisible()) {
+                    mainTourLine.setVisible(false);
+                } else {
+                    mainTourLine.setVisible(true);
                 }
-
-
-            }
-        });
-
-
+                break;
+            case (R.id.chem_eng_tour_button):
+                if (chemEngTourLine.isVisible()) {
+                    chemEngTourLine.setVisible(false);
+                } else {
+                    chemEngTourLine.setVisible(true);
+                }
+                break;
+        }
     }
 
     @Override
@@ -531,6 +886,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
         mCurrentEntry = (mCurrentEntry + 1) % mImages.size();
         mGroundOverlay.setImage(mImages.get(mCurrentEntry));
     }
+
+
 
     /**
      * Toggles the visibility between 100% and 50% when a {@link GroundOverlay} is clicked.
