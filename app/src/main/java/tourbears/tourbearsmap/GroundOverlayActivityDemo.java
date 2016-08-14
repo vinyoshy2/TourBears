@@ -24,15 +24,19 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.*;
 import android.Manifest;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -114,6 +118,40 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         addDrawerItems();
+
+        android.location.LocationListener mLocationListener = new android.location.LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                if (Math.abs(location.getLatitude() - 37.875435) < 2 && Math.abs(location.getLongitude() + 122.265627) < 2 ) {
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                            .setSmallIcon(R.drawable.notificon)
+                            .setContentTitle("Wow ur at Vinay's apartment")
+                            .setContentText("is rly cool in here");
+                    int notID = 001;
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                    mNotifyMgr.notify(notID, mBuilder.build());
+
+                }
+            }
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                return;
+            }
+            @Override
+            public void onProviderEnabled(String provider) {
+                return;
+            }
+            @Override
+            public void onProviderDisabled(String provider) {
+                return;
+            }
+        };
+        Criteria mCriteria = new Criteria();
+        mCriteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+        LocationManager mLocationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(mCriteria, true), (long) 3, (float) 3.0, mLocationListener);
     }
 
     private void addDrawerItems() {
