@@ -93,6 +93,7 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
 
     private Polyline mainTourLine;
     private Polyline chemEngTourLine;
+    private Polyline bearTourLine;
 
 
     @Override
@@ -203,8 +204,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87343961206614, -122.26523134857416),
                         new LatLng(37.873386416090206, -122.26520821452141),
                         new LatLng(37.87339117991053, -122.26515322923659))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.CNSStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.CNSFillColor))
                 .strokeWidth(2)
         );
         String LKSDesc = new StringBuilder()
@@ -241,8 +242,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.872725300706556, -122.26098205894232),
                         new LatLng(37.87270306934155, -122.26109940558672))
 
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LibraryStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LibraryFillColor))
                 .strokeWidth(2)
         );
         String moffitDesc = new StringBuilder()
@@ -268,8 +269,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87258450194822, -122.25920207798481),
                         new LatLng(37.87263505190932, -122.259228564779883))
 
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LibraryStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LibraryFillColor))
                 .strokeWidth(2)
         );
         String doeDesc = new StringBuilder()
@@ -291,8 +292,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.869450336620616, -122.25941196084021),
                         new LatLng(37.86939369704083, -122.25982703268527),
                         new LatLng(37.86935690775774, -122.25982636213303))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LSStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LSFillColor))
                 .strokeWidth(2)
         );
         String MLKDesc = new StringBuilder()
@@ -307,8 +308,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.871110068712774, -122.25852716714144),
                         new LatLng(37.87115876703273, -122.25833337754011),
                         new LatLng(37.871554175025665, -122.25850034505127))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.OtherStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.OtherFillColor))
                 .strokeWidth(2)
         );
         String southHallDesc = new StringBuilder()
@@ -324,8 +325,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.872014158360564, -122.2578465566039),
                         new LatLng(37.87203294933334, -122.25773323327302),
                         new LatLng(37.8725493022166, -122.25793842226267))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.OtherStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.OtherFillColor))
                 .strokeWidth(2)
         );
         String campanileDesc = new StringBuilder()
@@ -348,8 +349,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.86930185613435, -122.25895866751671),
                         new LatLng(37.869175078441366, -122.2589308395982),
                         new LatLng(37.86924521644044, -122.25849900394678))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LSStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LSFillColor))
                 .strokeWidth(2)
         );
         String sproulDesc = new StringBuilder()
@@ -374,8 +375,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.871471070710655, -122.26121373474598),
                         new LatLng(37.87185192060769, -122.26137433201075),
                         new LatLng(37.871795018211685, -122.26162880659103))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LSStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LSFillColor))
                 .strokeWidth(2)
         );
         String VLSBDesc = new StringBuilder()
@@ -427,8 +428,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87308470684321, -122.25996516644953),
                         new LatLng(37.873215976983246, -122.25990783423185),
                         new LatLng(37.87334274772303, -122.25982200354338))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.OtherStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.OtherFillColor))
                 .strokeWidth(2)
         );
         String memGladeDesc = new StringBuilder()
@@ -459,8 +460,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87180639869439, -122.25181963294744),
                         new LatLng(37.87155735098491, -122.25200336426497),
                         new LatLng(37.87118470416825, -122.25205231457947))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.OtherStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.OtherFillColor))
                 .strokeWidth(2)
         );
         String memStadiumDesc = new StringBuilder()
@@ -477,8 +478,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.8748917679755, -122.25882958620785),
                         new LatLng(37.87480840277378, -122.25879739969967),
                         new LatLng(37.874891767955, -122.25842524319886))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.COEStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.COEFillColor))
                 .strokeWidth(2)
         );
         String sutardjaDesc = new StringBuilder()
@@ -502,8 +503,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87111827332328, -122.25435633212327),
                         new LatLng(37.87108810152533, -122.25461684167385),
                         new LatLng(37.87101002532412, -122.2545977309346))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.EDStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.EDFillColor))
                 .strokeWidth(2)
         );
         String wursterDesc = new StringBuilder()
@@ -524,16 +525,13 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87410045638551, -122.25822810083628),
                         new LatLng(37.87413697864599, -122.25807420909405),
                         new LatLng(37.87410892531709, -122.25806280970573))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LibraryStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LibraryFillColor))
                 .strokeWidth(2)
         );
         String bechtelDesc = new StringBuilder()
-                .append("• Wurster Hall encompasses the College of Environmental Design where you " +
-                        "can find majors in Architecture, city planning, and sustainable " +
-                        "environmental design.\n")
-                .append("• Cal Alumni Irving Morrow designed the Golden Gate Bridge! Go up the " +
-                        "Campanile to see his amazing work\n")
+                .append("• This unique library is one of the 2 libraries on campus where you are expected to talk in!\n")
+                .append("• No need to be quiet while collaborating on projects.\n")
                 .toString();
         places.add(new Place(bechtelPolygon, "Bechtel Engineering Library", bechtelDesc, "bechtel"));
 
@@ -542,8 +540,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87390858189349, -122.25771378725769),
                         new LatLng(37.87339700235713, -122.25752670317888),
                         new LatLng(37.87327975936603, -122.25798469036818))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.COEStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.COEFillColor))
                 .strokeWidth(2)
         );
         String evansDesc = new StringBuilder()
@@ -558,8 +556,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87582756897271, -122.25897040218115),
                         new LatLng(37.87588870261739, -122.258539237082),
                         new LatLng(37.87617716804848, -122.2586103156209))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.COEStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.COEFillColor))
                 .strokeWidth(2)
         );
         String jacobsDesc = new StringBuilder()
@@ -575,8 +573,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87340070755021, -122.2603017836809),
                         new LatLng(37.87334380635043, -122.26061090826987),
                         new LatLng(37.87359390664474, -122.26070042699574))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LibraryStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LibraryFillColor))
                 .strokeWidth(2)
         );
         String starrDesc = new StringBuilder()
@@ -589,8 +587,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.870597411076574, -122.26672902703285),
                         new LatLng(37.87067601704789, -122.26604271680118),
                         new LatLng(37.8710039380236, -122.2660980373621))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LibraryStrokeColor))
+                .fillColor(ContextCompat.getColor(context,R.color.LibraryFillColor))
                 .strokeWidth(2)
         );
         String bampfaDesc = new StringBuilder()
@@ -616,8 +614,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                         new LatLng(37.87113309455287, -122.26056430488823),
                         new LatLng(37.87115426773278, -122.26047310978174),
                         new LatLng(37.87126780880629, -122.26051736623047))
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
+                .strokeColor(ContextCompat.getColor(context, R.color.LSStrokeColor))
+                .fillColor(ContextCompat.getColor(context, R.color.LSFillColor))
                 .strokeWidth(2)
         );
         String dwinelleDesc = new StringBuilder()
@@ -626,9 +624,9 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                 .toString();
         places.add(new Place(dwinellePolygon, "Dwinelle Hall", dwinelleDesc, "dwinelle"));
 
-//        for (Place place: places) {
-//            place.polygon.setClickable(true);
-//        }
+        for (Place place: places) {
+            place.polygon.setClickable(true);
+        }
 
 
         /* POLY LINES */
@@ -708,11 +706,12 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
         mainTourPoints.add(new LatLng(37.87267951467369, -122.26016767323019));
         mainTourPoints.add(new LatLng(37.87251807236542, -122.26019516587259));
         mainTourPoints.add(new LatLng(37.872425970693385, -122.2601877897978));
-        PolylineOptions mainOptions = new PolylineOptions().width(7).color(Color.parseColor("#ff7473")).geodesic(true);
+        PolylineOptions mainOptions = new PolylineOptions().width(7).color(ContextCompat.getColor(context, R.color.MainTourColor)).geodesic(true);
         for (int z = 0; z < mainTourPoints.size(); z++) {
             LatLng point = mainTourPoints.get(z);
             mainOptions.add(point);
         }
+        mainOptions.visible(false);
         mainTourLine = mMap.addPolyline(mainOptions);
 
         ArrayList<LatLng> chemEngTourPoints = new ArrayList<LatLng>();
@@ -737,15 +736,14 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
         chemEngTourPoints.add(new LatLng(37.87282984096395, -122.25666303187609));
         // above = right next to gilman hall; before loop
         // below = top left of loop (clockwise)
-        chemEngTourPoints.add(new LatLng(37.87295661236821, -122.2561986744404));
-        chemEngTourPoints.add(new LatLng(37.87311170193144, -122.2553500905633));
-        chemEngTourPoints.add(new LatLng(37.87293755697273, -122.25527197122574));
-        chemEngTourPoints.add(new LatLng(37.8727689694397, -122.25613731890918));
-        chemEngTourPoints.add(new LatLng(37.87295661236821, -122.2561986744404));
-        chemEngTourPoints.add(new LatLng(37.87282984096395, -122.25666303187609));
+        chemEngTourPoints.add(new LatLng(37.87301880702749, -122.25584529340267));
+        chemEngTourPoints.add(new LatLng(37.87305612379786, -122.25585769861937));
+        // middle of pimentel below
+        chemEngTourPoints.add(new LatLng(37.87342135076531, -122.25601159036158));
+        chemEngTourPoints.add(new LatLng(37.873570087605685, -122.25610882043839));
+        chemEngTourPoints.add(new LatLng(37.87357273416595, -122.256380058825));
         // resume
-        chemEngTourPoints.add(new LatLng(37.873349099487136, -122.25684374570847));
-        chemEngTourPoints.add(new LatLng(37.873549973744474, -122.2565896064043));
+        chemEngTourPoints.add(new LatLng(37.87355817808326, -122.25658558309078));
         chemEngTourPoints.add(new LatLng(37.87371061982484, -122.25659564137457));
         chemEngTourPoints.add(new LatLng(37.87380166127009, -122.25661173462868));
         chemEngTourPoints.add(new LatLng(37.873870471590074, -122.25666169077158));
@@ -797,52 +795,225 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
         chemEngTourPoints.add(new LatLng(37.87401788425159, -122.25864350795747));
         chemEngTourPoints.add(new LatLng(37.87389931897435, -122.25860696285964));
 
-        PolylineOptions chemEngOptions = new PolylineOptions().width(7).color(Color.parseColor("#D1B6E1")).geodesic(true);
+        PolylineOptions chemEngOptions = new PolylineOptions().width(7).color(ContextCompat.getColor(context, R.color.ChemEngTourColor)).geodesic(true);
         for (int z = 0; z < chemEngTourPoints.size(); z++) {
             LatLng point = chemEngTourPoints.get(z);
             chemEngOptions.add(point);
         }
+        chemEngOptions.visible(false);
         chemEngTourLine = mMap.addPolyline(chemEngOptions);
 
+        ArrayList<LatLng> bearTourPoints = new ArrayList<LatLng>();
+        // start: on oxford
+        bearTourPoints.add(new LatLng(37.8720694726188, -122.26611848920584));
+        bearTourPoints.add(new LatLng(37.872388918264086, -122.26616308093071));
+        bearTourPoints.add(new LatLng(37.872408238461695, -122.26601589471102));
+        bearTourPoints.add(new LatLng(37.872273526293526, -122.2659870609641));
+        bearTourPoints.add(new LatLng(37.87147107071065, -122.26589217782019));
+        bearTourPoints.add(new LatLng(37.870613555744185, -122.26580534130333));
+        // intersection of crescent and center
+        bearTourPoints.add(new LatLng(37.8706230837431, -122.26567827165127));
+        bearTourPoints.add(new LatLng(37.87064478640264, -122.26556796580553));
+        bearTourPoints.add(new LatLng(37.870650873732835, -122.26555187255143));
+        bearTourPoints.add(new LatLng(37.87062070174348, -122.26551432162522));
+        bearTourPoints.add(new LatLng(37.870610379744264, -122.26547710597515));
+        bearTourPoints.add(new LatLng(37.87060561574415, -122.26541910320522));
+        bearTourPoints.add(new LatLng(37.87061884907705, -122.2653547301883));
+        // intersection of eucalyptus rd and grinnell pathway below
+        bearTourPoints.add(new LatLng(37.87074641828435, -122.26468753069639));
+        bearTourPoints.add(new LatLng(37.87083772805852, -122.26411353796719));
+        // below: intersection of grinnell and hilgard way
+        bearTourPoints.add(new LatLng(37.870859695320625, -122.26389527320862));
+//        bearTourPoints.add(new LatLng(37.8708731932736, -122.26364348083735));
+//        bearTourPoints.add(new LatLng(37.870872928607874, -122.26356871426104));
+//        bearTourPoints.add(new LatLng(37.87086737062752, -122.26351272314788));
+//        bearTourPoints.add(new LatLng(37.87085651933131, -122.26343292742969));
+//        bearTourPoints.add(new LatLng(37.87083931605357, -122.26335112005471));
+//        bearTourPoints.add(new LatLng(37.87082449476491, -122.26330116391182));
+        bearTourPoints.add(new LatLng(37.870798557502596, -122.26387649774551));
+        bearTourPoints.add(new LatLng(37.87078003088104, -122.26387079805136));
+        bearTourPoints.add(new LatLng(37.87076653291098, -122.26386208087206));
+        bearTourPoints.add(new LatLng(37.87075594626608, -122.26384699344635));
+        bearTourPoints.add(new LatLng(37.87074297762398, -122.2638087719679));
+        bearTourPoints.add(new LatLng(37.87072365698969, -122.26376451551914));
+        bearTourPoints.add(new LatLng(37.870704071684024, -122.2637440636754));
+        // below: intersection of hilgard and schlessinger
+        bearTourPoints.add(new LatLng(37.870615937744034, -122.26369511336087));
+        bearTourPoints.add(new LatLng(37.87069533769466, -122.26330384612083));
+        bearTourPoints.add(new LatLng(37.870665430389955, -122.26325824856758));
+        bearTourPoints.add(new LatLng(37.87064293373684, -122.2632297500968));
+        bearTourPoints.add(new LatLng(37.87061620241066, -122.26320561021565));
+        bearTourPoints.add(new LatLng(37.87046851827541, -122.26310737431051));
+        bearTourPoints.add(new LatLng(37.870395470099076, -122.2630513831973));
+        bearTourPoints.add(new LatLng(37.87034041925169, -122.26299807429312));
+        bearTourPoints.add(new LatLng(37.87023693413392, -122.26283982396124));
+        bearTourPoints.add(new LatLng(37.870195116577065, -122.26274996995927));
+        bearTourPoints.add(new LatLng(37.87016970842967, -122.26266916841269));
+        bearTourPoints.add(new LatLng(37.8701435062685, -122.26253908127546));
+        bearTourPoints.add(new LatLng(37.87013265486567, -122.26240463554858));
+        bearTourPoints.add(new LatLng(37.87013927157489, -122.26229365915061));
+        bearTourPoints.add(new LatLng(37.87016415039626, -122.26217564195395));
+        // below: intersection of schlessinger and path sticking out of spiker plaza
+        bearTourPoints.add(new LatLng(37.87022714141705, -122.26206298917532));
+        bearTourPoints.add(new LatLng(37.8700905725811, -122.26183902472258));
+        bearTourPoints.add(new LatLng(37.87018161849986, -122.26170256733893));
+        bearTourPoints.add(new LatLng(37.87002149406189, -122.26138204336168));
+        bearTourPoints.add(new LatLng(37.869924889893795, -122.26092740893364));
+        bearTourPoints.add(new LatLng(37.86991589114293, -122.26085029542445));
+        // below: interesection with grade st
+        bearTourPoints.add(new LatLng(37.8699272719159, -122.26074501872061));
+        bearTourPoints.add(new LatLng(37.86968721663429, -122.26070243865252));
+        bearTourPoints.add(new LatLng(37.86950935819247, -122.26067092269658));
+        bearTourPoints.add(new LatLng(37.86945192464557, -122.26062566041946));
+        bearTourPoints.add(new LatLng(37.869399519803366, -122.2605401650071));
+        bearTourPoints.add(new LatLng(37.86938205151436, -122.26042415946722));
+        bearTourPoints.add(new LatLng(37.86938019881678, -122.26033195853232));
+        // intersect of cross sproul path and lower sproul plaza path
+        bearTourPoints.add(new LatLng(37.869395549738044, -122.26021897047758));
+        bearTourPoints.add(new LatLng(37.869116321273786, -122.26016700267793));
+        bearTourPoints.add(new LatLng(37.8692240427119, -122.2592691332102));
+        bearTourPoints.add(new LatLng(37.86952973782737, -122.2593318298459));
+        // UC berkeley visitor services
+        bearTourPoints.add(new LatLng(37.87011942144545, -122.25945688784122));
+        bearTourPoints.add(new LatLng(37.870123391471765, -122.25945722311735));
+        bearTourPoints.add(new LatLng(37.870174472457975, -122.25921750068665));
+        bearTourPoints.add(new LatLng(37.87018082449523, -122.25917156785727));
+        bearTourPoints.add(new LatLng(37.870189558545576, -122.25913669914007));
+        bearTourPoints.add(new LatLng(37.870200409940026, -122.2591256350279));
+        bearTourPoints.add(new LatLng(37.870290132383964, -122.25913368165493));
+        bearTourPoints.add(new LatLng(37.87033406722818, -122.25862976163626));
+        // intersection at eschleman rd
+        bearTourPoints.add(new LatLng(37.8704190254972, -122.25832164287569));
+        bearTourPoints.add(new LatLng(37.87079538151066, -122.25846379995345));
+        // south drive intersect
+        bearTourPoints.add(new LatLng(37.87100182070155, -122.2585643827915));
+        bearTourPoints.add(new LatLng(37.87113627053022, -122.25826296955347));
+        // intersect campanile way
+        bearTourPoints.add(new LatLng(37.87171482545806, -122.25847318768501));
+        bearTourPoints.add(new LatLng(37.871717472084974, -122.25839406251909));
+        // intersect campanile and s hall rd
+        bearTourPoints.add(new LatLng(37.87175452485195, -122.25825257599354));
+        // intersect glade path
+        bearTourPoints.add(new LatLng(37.872977255707745, -122.25870922207834));
+        bearTourPoints.add(new LatLng(37.872998428357675, -122.25860696285964));
+        bearTourPoints.add(new LatLng(37.87323317970602, -122.2586941346526));
+        bearTourPoints.add(new LatLng(37.87333057350698, -122.25874811410903));
+        bearTourPoints.add(new LatLng(37.873416322290375, -122.25881818681955));
+        bearTourPoints.add(new LatLng(37.87347110618304, -122.25881718099119));
+        bearTourPoints.add(new LatLng(37.87350895203682, -122.25882221013308));
+        bearTourPoints.add(new LatLng(37.873538328874936, -122.25882790982723));
+        bearTourPoints.add(new LatLng(37.873611373935155, -122.25876923650502));
+        bearTourPoints.add(new LatLng(37.873657953356044, -122.25859455764292));
+        // next to building; star; inst of transport studies
+        bearTourPoints.add(new LatLng(37.87388423364637, -122.25868172943592));
+        bearTourPoints.add(new LatLng(37.873899583629196, -122.25860562175512));
+        bearTourPoints.add(new LatLng(37.873761962979316, -122.25853219628335));
+        bearTourPoints.add(new LatLng(37.87375349400784, -122.25851811468601));
+        bearTourPoints.add(new LatLng(37.873751112109446, -122.25850269198419));
+        bearTourPoints.add(new LatLng(37.873797691441965, -122.25832767784594));
+        bearTourPoints.add(new LatLng(37.87379875006282, -122.25827906280756));
+        bearTourPoints.add(new LatLng(37.87370479740302, -122.25825559347868));
+        bearTourPoints.add(new LatLng(37.87311328987749, -122.25805040448903));
+        // interesect university dr and carillon rd
+        bearTourPoints.add(new LatLng(37.87307279724234, -122.2579186409712));
+        // intersect before across campanile
+        bearTourPoints.add(new LatLng(37.87252415954084, -122.25769031792879));
+        bearTourPoints.add(new LatLng(37.87246196446397, -122.25792568176986));
+        bearTourPoints.add(new LatLng(37.871642043180366, -122.25759845227005));
+        bearTourPoints.add(new LatLng(37.871834982224634, -122.25739661604165));
+        bearTourPoints.add(new LatLng(37.8720906455296, -122.2568581625819));
+        bearTourPoints.add(new LatLng(37.87222271142349, -122.25646924227478));
+        // intersect osuth dr and minor ln
+        bearTourPoints.add(new LatLng(37.87231216674418, -122.2558231651783));
+        bearTourPoints.add(new LatLng(37.872040095194954, -122.25569408386944));
+        bearTourPoints.add(new LatLng(37.87184689202562, -122.25557237863542));
+        // below: diagonal across
+        bearTourPoints.add(new LatLng(37.872500075496035, -122.25510466843843));
+        bearTourPoints.add(new LatLng(37.87250166345526, -122.25481398403645));
+        bearTourPoints.add(new LatLng(37.87235054251413, -122.25463662296535));
+        bearTourPoints.add(new LatLng(37.872219270832076, -122.25455615669489));
+        // beginning of haas path
+        bearTourPoints.add(new LatLng(37.87200780648138, -122.25453168153763));
+        bearTourPoints.add(new LatLng(37.87201680497675, -122.2544042766094));
+        bearTourPoints.add(new LatLng(37.87202421550153, -122.25436940789223));
+        bearTourPoints.add(new LatLng(37.87203612527192, -122.25434627383946));
+        bearTourPoints.add(new LatLng(37.87212319886813, -122.25425139069556));
+        bearTourPoints.add(new LatLng(37.872130609382204, -122.25420009344815));
+        bearTourPoints.add(new LatLng(37.87211949361081, -122.25416120141745));
+        bearTourPoints.add(new LatLng(37.87209540943369, -122.25411124527456));
+        bearTourPoints.add(new LatLng(37.87196651925321, -122.25400529801846));
+        bearTourPoints.add(new LatLng(37.87193740645022, -122.25399021059275));
+        bearTourPoints.add(new LatLng(37.8718892379691, -122.25397679954767));
+        bearTourPoints.add(new LatLng(37.87172011871183, -122.25394930690528));
+        bearTourPoints.add(new LatLng(37.87171535478345, -122.25379642099142));
+        bearTourPoints.add(new LatLng(37.87172699994112, -122.2537524998188));
+        bearTourPoints.add(new LatLng(37.87176643466595, -122.25367605686188));
+        bearTourPoints.add(new LatLng(37.87178046177774, -122.25361537188292));
+        bearTourPoints.add(new LatLng(37.87177702116566, -122.25354563444853));
+        bearTourPoints.add(new LatLng(37.87175664215237, -122.2534976899624));
+        bearTourPoints.add(new LatLng(37.87172038337449, -122.25347153842449));
+        bearTourPoints.add(new LatLng(37.87162828070524, -122.25344371050598));
+        bearTourPoints.add(new LatLng(37.871615047553625, -122.25341957062483));
+        bearTourPoints.add(new LatLng(37.87161028361847, -122.25338101387023));
+        bearTourPoints.add(new LatLng(37.87160340237827, -122.2531419619918));
+        bearTourPoints.add(new LatLng(37.87159625647427, -122.25307960063219));
+        bearTourPoints.add(new LatLng(37.8715832879801, -122.25303165614604));
+        bearTourPoints.add(new LatLng(37.87153988320748, -122.25290827453135));
+        bearTourPoints.add(new LatLng(37.871525591386494, -122.25277181714773));
+        bearTourPoints.add(new LatLng(37.87146286613945, -122.2527687996626));
+        // end memorial stadium
+        bearTourPoints.add(new LatLng(37.87148112793574, -122.25265044718981));
+        bearTourPoints.add(new LatLng(37.87103490385143, -122.25263804197313));
+        bearTourPoints.add(new LatLng(37.871058988375225, -122.25233025848864));
 
 
-//        mMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
-//            public void onPolygonClick(Polygon polygon) {
-//
-//                for (Place place: places)  {
-//                    if (place.polygon.equals(polygon)) {
-//                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
-//                        builder1.setCancelable(true);
-////                        builder1.setInverseBackgroundForced(true);
-//                        builder1.setPositiveButton(
-//                                "Done",
-//                                new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int id) {
-//                                        dialog.cancel();
-//                                    }
-//                                });
-//                        LayoutInflater factory = LayoutInflater.from(context);
-//                        final View view = factory.inflate(R.layout.place_dialogue, null);
-//                        ImageView image = (ImageView) view.findViewById(R.id.image);
-//                        int resId = getResources().getIdentifier(place.imgResource, "drawable", getPackageName());
-//                        image.setImageResource(resId);
-//                        TextView description = (TextView) view.findViewById(R.id.text);
-//                        description.setText(place.description);
-//                        TextView title = (TextView) view.findViewById(R.id.title);
-//                        title.setText(place.title);
-//                        builder1.setView(view);
-//                        AlertDialog alert11 = builder1.create();
-//                        alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//
-//                        alert11.show();
-//                        break;
-//                    }
-//
-//                }
-//
-//
-//            }
-//        });
+        PolylineOptions bearOptions = new PolylineOptions().width(7).color(ContextCompat.getColor(context, R.color.BearsTourColor)).geodesic(true);
+        for (int z = 0; z < bearTourPoints.size(); z++) {
+            LatLng point = bearTourPoints.get(z);
+            bearOptions.add(point);
+        }
+        bearOptions.visible(false);
+        bearTourLine = mMap.addPolyline(bearOptions);
+
+
+
+        mMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            public void onPolygonClick(Polygon polygon) {
+
+                for (Place place: places)  {
+                    if (place.polygon.equals(polygon)) {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+                        builder1.setCancelable(true);
+//                        builder1.setInverseBackgroundForced(true);
+                        builder1.setPositiveButton(
+                                "Done",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        LayoutInflater factory = LayoutInflater.from(context);
+                        final View view = factory.inflate(R.layout.place_dialogue, null);
+                        ImageView image = (ImageView) view.findViewById(R.id.image);
+                        int resId = getResources().getIdentifier(place.imgResource, "drawable", getPackageName());
+                        image.setImageResource(resId);
+                        TextView description = (TextView) view.findViewById(R.id.text);
+                        description.setText(place.description);
+                        TextView title = (TextView) view.findViewById(R.id.title);
+                        title.setText(place.title);
+                        builder1.setView(view);
+                        AlertDialog alert11 = builder1.create();
+                        alert11.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+                        alert11.show();
+                        break;
+                    }
+
+                }
+
+
+            }
+        });
 
 
     }
@@ -856,6 +1027,8 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                 } else {
                     mainTourLine.setVisible(true);
                 }
+                chemEngTourLine.setVisible(false);
+                bearTourLine.setVisible(false);
                 break;
             case (R.id.chem_eng_tour_button):
                 if (chemEngTourLine.isVisible()) {
@@ -863,6 +1036,17 @@ public class GroundOverlayActivityDemo extends AppCompatActivity
                 } else {
                     chemEngTourLine.setVisible(true);
                 }
+                mainTourLine.setVisible(false);
+                bearTourLine.setVisible(false);
+                break;
+            case (R.id.bears_tour_button):
+                if (bearTourLine.isVisible()) {
+                    bearTourLine.setVisible(false);
+                } else {
+                    bearTourLine.setVisible(true);
+                }
+                mainTourLine.setVisible(false);
+                chemEngTourLine.setVisible(false);
                 break;
         }
     }

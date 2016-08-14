@@ -5,4 +5,21 @@
     <color name="colorAccent">#FF4081</color>
     <color name="white">#D0FFFFFF</color>
     <color name="black">#19191a</color>
+    <color name="CNSStrokeColor">#2c502c</color>
+    <color name="CNSFillColor">#2200FFFF</color>
+    <color name="COCStrokeColor">#424074</color>
+    <color name="COCFillColor">#57b0a7d6</color>
+    <color name="COEStrokeColor">#32543e</color>
+    <color name="COEFillColor">#56acfc9f</color>
+    <color name="EDStrokeColor">#6b5218</color>
+    <color name="EDFillColor">#8df1bd79</color>
+    <color name="OtherStrokeColor">#834343</color>
+    <color name="OtherFillColor">#d6fae0e0</color>
+    <color name="LSStrokeColor">#285183</color>
+    <color name="LSFillColor">#897cbbf2</color>
+    <color name="ChemEngTourColor">#996bb6</color>
+    <color name="MainTourColor">#405da4</color>
+    <color name="BearsTourColor">#7ac464</color>
+    <color name="LibraryStrokeColor">#89430d</color>
+    <color name="LibraryFillColor">#75fffc7b</color>
 </resources>
